@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Reimbursement Request</title>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+	integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+	crossorigin="anonymous">
+</head>
+<body>
+	<h1>Request reimbursement:</h1>
+
+		Event Type: <select name = "type" id = "eventType">
+			<option value = "certification" > Certification: 100% Reimbursement</option>
+			<option value = "seminar">Seminar: 60% Reimbursement</option>
+			<option value = "certprep">Certification Prep: 75% Reimbursement</option>
+			<option value = "training">Technical Training: 90% Reimbursement</option>
+			<option value = "uniCourse">University Course: 80% Reimbursement</option>
+			<option value = "other">Other: 30% Reimbursement</option>
+		</select><br>
+		Event Cost :<input type = "text" id = "eventCost"/><br>
+		
+		Event Grade Format: <select name = "type" id = "gradeFormat">
+			<option value = "percentage" >Percentage Grade Format</option>
+			<option value = "letter">Letter Grade</option>
+			<option value = "mastery">Mastery Grading</option>
+			<option value = "pass_fail">Pass or Fail</option>
+			<option value = "standards">Standards Grading</option>
+		</select><br>
+		Event Date : <input type = "date" id = "eventDate"/><br>
+		Event Description: <input type = "text" id = "description"/> <br>
+		Event Related Files: <input type = "file" id = "file" multiple/><br>
+		<button onclick = "submit()">Submit</button>
+	
+</body>
+<script>
+    function submit() {
+       
+        let eventType = document.getElementById("eventType").value;
+        let eventCost = document.getElementById("eventCost").value;
+        let gradeFormat = document.getElementById("gradeFormat").value;
+        let eventDate = document.getElementById("eventDate").value;
+        let description = document.getElementById("description").value;
+        let file = document.getElementById("file").values; 
+		let amount = document.getElementById("eventCost").value; 
+        //Make AJAX call:
+        let xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function() {
+            if(this.readyState == 4 && this.status == 200) {
+            	if(this.response = "Form submitted"){
+            		alert("Request submitted successfully")
+            	}
+            }}
+        /*
+            A couple of things are changing here. We are making
+            a POST request this time. POST is used when you are
+            adding (or creating) data to the database.
+
+        */
+        xhttp.open("POST","http://localhost:8080/TRMS/reimbursementform/.do",true);
+
+        xhttp.setRequestHeader('Content-Type','application/json');
+
+        /*
+            The send function will now pass in parameters/variables
+            into the Request Body.
+        */
+        let request = {
+        	eventType: eventType,
+        	eventCost: eventCost, 
+        	amount: amount, 
+        	gradeFormat: gradeFormat,
+        	eventDate: eventDate,
+        	description: description,
+        	file: file
+        };
+        console.log(request); 
+        
+        let requestJSON = JSON.stringify(request); 
+        console.log(requestJSON); 
+        xhttp.send(requestJSON);
+        
+    }
+</script>
+</html>

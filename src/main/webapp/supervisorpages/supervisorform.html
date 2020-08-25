@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Supervisor Options</title>
+</head>
+<body>
+<table border=1>
+<tr><th>Username</th><th>Form ID</th><th>Event type</th><th>Event cost</th><th>Grade format</th><th>Amount to be deducted</th><th>Files</th><th>Final grade</th><th>Time submitted</th><tr>
+
+</table>
+<h2> Enter a form id number to add comments and approval:</h2>
+<input type ="number" id = "formnumber">
+<br>
+<h3>Do you approve or reject this request?</h3>
+<select name = "approval" id = "approvalorreject">
+			<option value = "Approve" > Approved by supervisor</option>
+			<option value = "Reject">Rejected by supervisor</option>			
+</select><br>
+
+<h3>Enter any reasons you have for making the decision:</h3>
+<input type = "text" id = "reasons">
+<button onclick = "submitProcess()">Submit</button>
+
+</body>
+
+<script>
+    function submitProcess() {
+       
+        let f_id = document.getElementById("f_id").value;
+        let approval = document.getElementById("approvalorreject").value;
+        let sup_reasons = document.getElementById("reasons").value;
+       
+        //Make AJAX call:
+        let xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function() {
+            if(this.readyState == 4 && this.status == 200) {
+            	if(this.response = "Submitted successfully"){
+            		alert("Decision submitted successfully")
+            	}
+            }
+        }
+        /*
+            A couple of things are changing here. We are making
+            a POST request this time. POST is used when you are
+            adding (or creating) data to the database.
+
+        */
+        xhttp.open("POST","http://localhost:8080/TRMS/supervisorpages/supervisorform/.do",true);
+
+        xhttp.setRequestHeader('Content-Type','application/json');
+
+        /*
+            The send function will now pass in parameters/variables
+            into the Request Body.
+        */
+       let process = {
+        	f_id : f_id, 
+        	approval : approval,
+        	sup_reason : sup_reasons
+         }
+        
+        let processJson = JSON.stringify(process); 
+        console.log(processJson); 
+        xhttp.send(processJson);
+        
+    }
+</script>
+</html>
